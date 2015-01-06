@@ -1,5 +1,5 @@
 =================================
- nodemon - Webservice node monitoring tool
+ nodemon - node monitoring tool
 =================================
 
 Tool that generate report about node health and push it to the central node.

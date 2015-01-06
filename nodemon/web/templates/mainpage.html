@@ -20,7 +20,13 @@ $for report in report_list:
 								<li class="faillog-fail">$fail['file']<div><pre>$fail['tail']</pre></div></li>
 						</ul>
 					</li>
-			</ul>
-				
+				$if group['group'] == 'process':
+					<li class="process">$group['title']
+						<ul>
+							$for ps_title, ps_pattern, ps_active in group['processes']:
+								<li class="process-$ps_active">$ps_title</li>
+						</ul>
+					</li>
+			</ul>				
 	</li>
 </ul>

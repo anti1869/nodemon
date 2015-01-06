@@ -15,6 +15,12 @@
 					"rotten":{"days":1}
 				},
 				{
+					"type":"freshfile",
+					"title":"Проверка директории",
+					"path":"/Users/anti1869/Sites/redpig/trunk/tmp",
+					"rotten":{"days":1}
+				},				
+				{
 					"type":"freshdbrecord",
 					"title":"Пример проверки записи БД",
 					"table":"currencies_currencyquote",
@@ -27,6 +33,11 @@
 			"group":"faillog",
 			"title":"Faillogs",
 			"dirs":["/Users/anti1869/Sites/bhom/trunk/tmp/faillog","/Users/anti1869/Sites/redpig/trunk/tmp/faillog"]
+		},
+		{
+			"group":"process",
+			"title":"Тест сервисов",
+			"processes":[["Celery", "celery"], ["Dropbox","Dropbox.app/Contents/MacOS/Dropbox"]]
 		}
 	],
 	"web":{
