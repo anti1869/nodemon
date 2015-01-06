@@ -1,0 +1,39 @@
+$def with(page)
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+	<title>$page.title</title>
+	<style type="text/css">		
+		.siteWrapper { width:90%; margin:0px auto;}
+		.blackLink {color:#000000}
+		.newitem {background-color: #ffecf7}
+		.roweven {}
+		.rowodd {}
+		.rowselected {background-color: #cae8ff}
+		input[type="text"] {border:#cccccc 1px solid}
+		.passive {display:none}
+		.active {display:inline}
+		.pseudolink {color: #007cff; border-bottom: #007cff dashed 1px; cursor:pointer}
+		a {color:#007cff}
+	</style>		
+	
+</head>
+<body bgcolor="#ffffff" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" marginwidth="0" marginheight="0">
+	<div style="border-top:#ff2963 10px solid">&nbsp;</div>
+	<div class="siteWrapper">
+		<table cellpadding="0" cellspacing="0" width="100%">
+		<tr valign="top">
+			<td width="100%">
+				<h1><a href="/" class="blackLink">Nodemon</a></h1>
+			</td>			
+		</tr>
+		</table>
+		
+		$:page
+	</div>
+</body>
+</html>
+
+
+

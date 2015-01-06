@@ -1,0 +1,26 @@
+$def with(report_list)
+$var title: Nodemon Web Interface
+
+<ul>
+$for report in report_list:
+	<li class="node alive-$report['alive']">$report['nodename'] <span>$report['external-ip']</span> <span>Last seen at $report['last-seen']</span>
+		$for group in report['groups']:
+			<ul>
+				$if group['group'] == 'folder':
+					<li class="folder">$group['title']
+						<ul>
+							$for signal in group['signals']:
+								<li class="folder-signal signal-status-$signal['status']">$signal['title'] (last update: $signal['last-update'])</li>
+						</ul>
+					</li>
+				$if group['group'] == 'faillog':
+					<li class="faillog">$group['title']
+						<ul>
+							$for fail in group['fails']:
+								<li class="faillog-fail">$fail['file']<div><pre>$fail['tail']</pre></div></li>
+						</ul>
+					</li>
+			</ul>
+				
+	</li>
+</ul>

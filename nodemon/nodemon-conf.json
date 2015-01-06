@@ -1,0 +1,35 @@
+{
+	"nodename":"example",
+	"report-host":"0.0.0.0:8080",
+	"mysql":{"host":"localhost", "user":"anti1869", "passwd":"dcqvfe"},
+	"groups":[
+		{
+			"group":"folder",
+			"title":"Example Folder",
+			"mysql-db":"bhom",
+			"signals":[
+				{
+					"type":"freshfile",
+					"title":"Пример проверки файла",
+					"path":"/Users/anti1869/.bash_history",
+					"rotten":{"days":1}
+				},
+				{
+					"type":"freshdbrecord",
+					"title":"Пример проверки записи БД",
+					"table":"currencies_currencyquote",
+					"field":"updated",
+					"rotten":{"days":1}
+				}
+			]
+		},
+		{
+			"group":"faillog",
+			"title":"Faillogs",
+			"dirs":["/Users/anti1869/Sites/bhom/trunk/tmp/faillog","/Users/anti1869/Sites/redpig/trunk/tmp/faillog"]
+		}
+	],
+	"web":{
+		"data-dir":"/Users/anti1869/Sites/nodemon/tmp"
+	}
+}
