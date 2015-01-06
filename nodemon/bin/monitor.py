@@ -41,6 +41,13 @@ def ping():
 	args = {'connection' :None}
 	if 'mysql' in config:
 		args['connection'] = MySQLdb.connect(**config['mysql'])
+		
+	# Open or create database file
+	if not os.path.isfile(os.path.join(config['data-dir'], 'db.json')):
+		args['db'] = {"first_run":datetime.today()}
+	else:
+		with open(os.path.join(config['data-dir'], 'db.json'), 'r') as f:
+			args['db'] = json.load(f)
 	
 	# What groups are in config
 	supported_groups = {}
@@ -70,14 +77,16 @@ def ping():
 	request = urllib2.Request("http://%s/report/" % config['report-host'], json.dumps(config, default=json_serial), {'Content-Type': 'application/json'}) 
 	try:
 		f = urllib2.urlopen(request, timeout = 15)
+		response = f.read()
+		f.close()
+		print response
 	except urllib2.URLError:
-		sys.stderr.write("ERROR connecting to report host '%s'\n" % config['report-host'])
-		sys.exit()
-	response = f.read()
-	f.close()
-	print response
+		sys.stderr.write("ERROR connecting to report host '%s'\n" % config['report-host'])		
+	
 
-
+	# Save db file
+	with open(os.path.join(config['data-dir'], "db.json"), 'w') as f:
+		json.dump(args['db'], f, default=json_serial)
 
 if __name__ == "__main__":
 	ping()

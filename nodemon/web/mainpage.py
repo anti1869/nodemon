@@ -24,7 +24,7 @@ class Mainpage:
 	def GET(self):
 		render = web.template.render('templates', base = "base", globals = t_globals)
 		
-		report_dir = os.path.join(config['web']['data-dir'], 'reports')
+		report_dir = os.path.join(config['data-dir'], 'reports')
 		
 		if not os.path.isdir(report_dir): # Check data dir exist			
 			return render.error("No reports dir at '%s'" % report_dir)

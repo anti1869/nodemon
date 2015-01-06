@@ -2,6 +2,7 @@
 	"nodename":"example",
 	"report-host":"0.0.0.0:8080",
 	"mysql":{"host":"localhost", "user":"anti1869", "passwd":"dcqvfe"},
+	"data-dir":"/Users/anti1869/Sites/nodemon/tmp",
 	"groups":[
 		{
 			"group":"folder",
@@ -35,12 +36,22 @@
 			"dirs":["/Users/anti1869/Sites/bhom/trunk/tmp/faillog","/Users/anti1869/Sites/redpig/trunk/tmp/faillog"]
 		},
 		{
+			"group":"charts",
+			"title":"Графики",
+			"charts":[
+				{
+					"type":"dbtablecount",
+					"title":"Товары в Поросенке",
+					"id":"redpig-item-count",
+					"dbtable":"redpig/catalogue_item",
+					"update":{"days":1}
+				}
+			]
+		},
+		{
 			"group":"process",
 			"title":"Тест сервисов",
 			"processes":[["Celery", "celery"], ["Dropbox","Dropbox.app/Contents/MacOS/Dropbox"]]
 		}
-	],
-	"web":{
-		"data-dir":"/Users/anti1869/Sites/nodemon/tmp"
-	}
+	]
 }

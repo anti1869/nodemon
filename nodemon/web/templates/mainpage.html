@@ -19,14 +19,26 @@ $for report in report_list:
 							$for fail in group['fails']:
 								<li class="faillog-fail">$fail['file']<div><pre>$fail['tail']</pre></div></li>
 						</ul>
-					</li>
+					</li>								
 				$if group['group'] == 'process':
 					<li class="process">$group['title']
 						<ul>
 							$for ps_title, ps_pattern, ps_active in group['processes']:
 								<li class="process-$ps_active">$ps_title</li>
 						</ul>
-					</li>
+					</li>	
+				$if group['group'] == 'charts':
+					<li class="charts">$group['title']
+						<ul>
+							$for chart in group['charts']:
+								<li class="chart-link"><a href="/chart/$chart['id']/">$chart['title']</a> (
+									$for i in range(5): 
+										$if i < len(chart['values']):  
+											$chart['values'][-1 - i]
+											$if not loop.last:,
+								)</li>
+						</ul>
+					</li>			
 			</ul>				
 	</li>
 </ul>

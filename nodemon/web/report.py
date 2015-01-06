@@ -20,11 +20,11 @@ class Report:
 	
 	def POST(self):
 		report = json.loads(web.data()) # Load report from POST data
-		if not os.path.isdir(config['web']['data-dir']): # Check data dir exist
-			sys.stderr.write("ERROR no data dir available '%s'" % config['web']['data-dir'])
+		if not os.path.isdir(config['data-dir']): # Check data dir exist
+			sys.stderr.write("ERROR no data dir available '%s'" % config['data-dir'])
 			return "error"
 		try:
-			os.makedirs(os.path.join(config['web']['data-dir'],'reports')) # Make dir for reports if necessary
+			os.makedirs(os.path.join(config['data-dir'],'reports')) # Make dir for reports if necessary
 		except OSError:
 			pass
 		
@@ -33,6 +33,6 @@ class Report:
 		report['last-seen'] = datetime.today().strftime('%Y-%m-%d %H:%M:%S')
 		
 		# Save modified report file
-		with open(os.path.join(config['web']['data-dir'],'reports', "%s.json" % report['nodename']), 'w') as f:
+		with open(os.path.join(config['data-dir'],'reports', "%s.json" % report['nodename']), 'w') as f:
 			json.dump(report, f)
 		return "ok"
