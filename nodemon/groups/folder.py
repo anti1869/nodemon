@@ -43,6 +43,17 @@ def signal_freshdbrecord(config, args):
 	config["status"] = False if config["last-update"] < datetime.today() - timedelta(**config['rotten']) else True # True = fresh, False = rotten
 	return config
 	
+def signal_errorlog(config, args):
+	""" Get errors from mysql log """
+	if 'table' in config: # Log in MySQL table
+		cursor = args['connection'].cursor()
+		rotten = datetime.today() - timedelta(**config['rotten'])
+		cursor.execute("select count(*) from %s where created >= '%s' limit 1" % (config['table'], rotten))
+		config['total'] = cursor.fetchone()[0]
+		cursor.execute("select path, title, count(*) as cnt from %s group by path order by cnt desc" % (config['table']))
+		config['errors'] = [[i[0], i[1], i[2]] for i in cursor.fetchall()]
+	return config
+	
 	
 
 def process(config, args):

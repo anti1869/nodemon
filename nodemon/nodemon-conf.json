@@ -27,6 +27,12 @@
 					"table":"currencies_currencyquote",
 					"field":"updated",
 					"rotten":{"days":1}
+				},
+				{
+					"type":"errorlog",
+					"title":"Ошибки 500",
+					"table":"errorlog_500",
+					"rotten":{"days":1}
 				}
 			]
 		},
