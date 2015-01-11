@@ -38,6 +38,8 @@ class Mainpage:
 				report = json.load(f)
 				node_last_seen = datetime.strptime(report['last-seen'], '%Y-%m-%d %H:%M:%S')
 				report["alive"] = False if node_last_seen < datetime.today() - timedelta(hours = 1) else True # Check node last seen boundary
+				ago = datetime.today() - node_last_seen
+				report["last-seen-hours-ago"] = ago.days * 24 + ago.seconds / 3600
 				report_list.append(report)
 		
 		return render.mainpage(report_list)

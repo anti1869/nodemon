@@ -1,54 +1,102 @@
 $def with(report_list)
 $var title: Nodemon Web Interface
 
-<ul>
+
+$def datetime(dt):
+	$dt[8:10].$dt[5:7].$dt[0:4] $dt[11:16]
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.1/Chart.min.js"></script>
+<ul class="nodes">
 $for report in report_list:
-	<li class="node alive-$report['alive']">$report['nodename'] <span>$report['external-ip']</span> <span>Last seen at $report['last-seen']</span>
+	<li class="node"><span class="node-name">$report['nodename']</span> <span class="dimmed">$report['external-ip']</span> <span class="node-alive-$report['alive']">Last seen at $datetime(report['last-seen']) ($report['last-seen-hours-ago'] hours ago)</span>
 		$for group in report['groups']:
 			<ul>
 				$if group['group'] == 'folder':
-					<li class="folder">$group['title']
-						<ul>
+					<li class="group folder"><span class="group-title">$group['title']</span>
+						<ul class="list">
 							$for signal in group['signals']:
 								$if signal['type'] == 'errorlog':
-									<li class="errorlog-signal">$signal['title'] ($signal['total'])
+									<li class="errorlog-signal"><span onclick="swapClass('errorlog-signal-errors', 'active', 'passive');" id="errorlog-signal-switcher" class="pseudolink 
+										$if signal['total'] != 0: bad
+									">$signal['title'] ($signal['total'])</span>
 										$if signal['total'] != 0:
-											<ul class="errors">
-												$for error in signal['errors']:
-													<li>$error[2] - $error[0] - <pre>$error[1]</pre></li>
-											</ul>
+											<div class="passive" id="errorlog-signal-errors">
+												<ul class="errors">
+													$for error in signal['errors']:
+														<li>$error[2] - $error[0] - <pre>$error[1]</pre></li>
+												</ul>
+											</div>
 									</li>
 								$else:
-									<li class="folder-signal signal-status-$signal['status']">$signal['title'] (last update: $signal['last-update'])</li>
+									<li class="folder-signal signal-status-$signal['status']">$signal['title'] (last update: $datetime(signal['last-update']))</li>
 											
 						</ul>
 					</li>
 				$if group['group'] == 'faillog':
-					<li class="faillog">$group['title']
-						<ul>
+					<li class="group faillog"><span class="group-title">$group['title']</span>
+						<ul class="list">
 							$for fail in group['fails']:
-								<li class="faillog-fail">$fail['file']<div><pre>$fail['tail']</pre></div></li>
+								<li class="faillog-fail"><span class="pseudolink bad" onclick="swapClass('faillog-fail-$loop.index', 'active', 'passive');">$fail['file']</span><div class="passive" id="faillog-fail-$loop.index"><pre>$fail['tail']</pre></div></li>
 						</ul>
 					</li>								
 				$if group['group'] == 'process':
-					<li class="process">$group['title']
-						<ul>
+					<li class="group process"><span class="group-title">$group['title']</span>
+						<ul class="list">
 							$for ps_title, ps_pattern, ps_active in group['processes']:
 								<li class="process-$ps_active">$ps_title</li>
 						</ul>
 					</li>	
 				$if group['group'] == 'charts':
-					<li class="charts">$group['title']
-						<ul>
+					<li class="group charts"><span class="group-title">$group['title']</span>
+						<ul class="list">
 							$for chart in group['charts']:
-								<li class="chart-link">$chart['title'] (
+								<li class="chart-link"><span class="pseudolink" onclick="swapClass('chart-$chart['id']-wrapper','active','passive');">$chart['title']</span> <span class="dimmed">(
 									$for i in range(5): 
 										$if i < len(chart['values']):  
 											$chart['values'][-1 - i]
 											$if not loop.last:,
-								)</li>
+								)</span>
+									<div id="chart-$chart['id']-wrapper" class="passive"><br /><br />
+										<canvas id="chart-$chart['id']" width="700" height="300"></canvas>
+										<script language="JavaScript">
+											var data$loop.index = {
+											    labels: [
+											    	$for x in chart['values']:
+											    		"$loop.index",
+											    ],
+											    datasets: [
+											        {									           
+											            fillColor: "rgba(220,220,220,0.2)",
+											            strokeColor: "rgba(220,220,220,1)",
+											            pointColor: "rgba(220,220,220,1)",
+											            pointStrokeColor: "#fff",
+											            pointHighlightFill: "#fff",
+											            pointHighlightStroke: "rgba(220,220,220,1)",
+											            data: [
+											            	$for v in chart['values']:
+											            		$v,
+											            ]
+											        }
+											    ]
+											};
+											var ctx$loop.index = document.getElementById("chart-$chart['id']").getContext("2d");
+											var lch$loop.index = new Chart(ctx$loop.index).Line(data$loop.index, {});
+										</script>
+									</div>
+								</li>
 						</ul>
 					</li>			
 			</ul>				
 	</li>
 </ul>
+
+<script language="JavaScript">
+	function swapClass(element_id, class1, class2){
+		el = document.getElementById(element_id);
+		if (el.className == class1){
+			el.className = class2;
+		} else {
+			el.className = class1;
+		}
+	}		
+</script>
