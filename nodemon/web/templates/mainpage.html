@@ -3,7 +3,13 @@ $var title: Nodemon Web Interface
 
 
 $def datetime(dt):
-	$dt[8:10].$dt[5:7].$dt[0:4] $dt[11:16]
+	$if dt is None:
+		None
+	$else:
+		$if dt[11:19] == '00:00:00':
+			$dt[8:10].$dt[5:7].$dt[0:4]
+		$else:		
+			$dt[8:10].$dt[5:7].$dt[0:4] $dt[11:16]
 
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.1/Chart.min.js"></script>
 <ul class="nodes">

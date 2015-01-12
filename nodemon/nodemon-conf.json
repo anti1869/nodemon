@@ -1,7 +1,8 @@
 {
 	"nodename":"example",
 	"report-host":"0.0.0.0:8080",
-	"mysql":{"host":"localhost", "user":"anti1869", "passwd":"dcqvfe"},
+	"report-host-au2th":["nodemon","Tredp872Ghr1"],
+	"mysql":{"host":"localhost", "user":"nodemon", "passwd":"Tredp872Ghr1"},
 	"data-dir":"/Users/anti1869/Sites/nodemon/tmp",
 	"groups":[
 		{
@@ -32,6 +33,33 @@
 					"type":"errorlog",
 					"title":"Ошибки 500",
 					"table":"errorlog_500",
+					"rotten":{"days":1}
+				},
+				{
+					"type":"freshdbrecord",
+					"title":"Свежесть инфляции",
+					"table":"inflation_inflation",
+					"field":"enddate",
+					"rotten":{"days":15}
+				},
+				{
+					"type":"freshdbrecord",
+					"title":"Свежесть акций",
+					"table":"markets_micexhistory",
+					"field":"updated",
+					"rotten":{"days":3}
+				}
+			]
+		},
+		{
+			"group":"folder",
+			"title":"RedPig Example",
+			"mysql-db":"redpig",
+			"signals":[
+				{
+					"type":"freshfile",
+					"title":"Пример проверки файла",
+					"path":"/Users/anti1869/.bash_history",
 					"rotten":{"days":1}
 				}
 			]

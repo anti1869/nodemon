@@ -75,7 +75,11 @@ def ping():
 	# Report to central
 	
 	request = urllib2.Request("http://%s/report/" % config['report-host'], json.dumps(config, default=json_serial), {'Content-Type': 'application/json'}) 
-	try:
+	if 'report-host-auth' in config: # Need to add auth params to request		
+		import base64 #http://stackoverflow.com/questions/635113/python-urllib2-basic-http-authentication-and-tr-im
+		base64string = base64.encodestring('%s:%s' % (config['report-host-auth'][0], config['report-host-auth'][1])).replace('\n', '')
+		request.add_header("Authorization", "Basic %s" % base64string)
+	try:	
 		f = urllib2.urlopen(request, timeout = 15)
 		response = f.read()
 		f.close()
