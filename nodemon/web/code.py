@@ -9,9 +9,12 @@
 
 import sys, os
 import web
-from report import Report
-from mainpage import Mainpage
+from nodemon.web.report import Report
+from nodemon.web.mainpage import Mainpage
 
+abspath = os.path.dirname(__file__)
+sys.path.append(abspath)
+os.chdir(abspath)
 
 urls = ( # Set url handlers
 	'/', 'Mainpage',
@@ -30,5 +33,8 @@ render = web.template.render('templates', base = "base", globals = t_globals)
 if __name__ == "__main__": 
 	app = web.application(urls, globals())
 	app.run()
+	
+app = web.application(urls, globals(), autoreload=False)
+application = app.wsgifunc()	
 	
 	
