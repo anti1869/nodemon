@@ -11,7 +11,6 @@
 import os
 import sys
 import json
-import MySQLdb
 import urllib2
 from datetime import datetime
 from nodemon import config_loader
@@ -40,7 +39,12 @@ def ping():
 	# Connect to MySQL if needed
 	args = {'connection' :None}
 	if 'mysql' in config:
-		args['connection'] = MySQLdb.connect(**config['mysql'])
+		try:
+			import MySQLdb
+			args['connection'] = MySQLdb.connect(**config['mysql'])
+		except ImportError:
+			sys.stderr.write("WARNING config demands monitoring MySQL databases, but no 'mysql-python' package found\n")
+		
 		
 	# Open or create database file
 	if not os.path.isfile(os.path.join(config['data-dir'], 'db.json')):
@@ -52,10 +56,10 @@ def ping():
 	# What groups are in config
 	supported_groups = {}
 	for group_name in set([g['group'] for g in config['groups']]):
-		try:
-			supported_groups[group_name] = import_module('nodemon.groups.%s' % group_name) # Import support module for that group
-		except ImportError:
-			sys.stderr.write('WARNING no support for group "%s"\n' % group_name)
+		#try:
+		supported_groups[group_name] = import_module('nodemon.groups.%s' % group_name) # Import support module for that group
+		#except ImportError:
+		#	sys.stderr.write('WARNING no support for group "%s"\n' % group_name)
 			
 	# Cycle all groups
 	results = []
@@ -69,6 +73,7 @@ def ping():
 	# Prepare to report
 	try:
 		config.pop('mysql')
+		config['version'] = __import__('nodemon').get_version()
 	except KeyError:
 		pass
 		
@@ -91,6 +96,18 @@ def ping():
 	# Save db file
 	with open(os.path.join(config['data-dir'], "db.json"), 'w') as f:
 		json.dump(args['db'], f, default=json_serial)
+	
+def print_help():
+	""" Print instructions on how to use this script """
+	print "You need to set up configuration file and set up what to monitor there."
+	print "Then you will run 'monitor.py' probably by the means of 'crontab'"
+	print "See https://github.com/anti1869/nodemon/ for more documentation."
+	
 
 if __name__ == "__main__":
-	ping()
+	if len(sys.argv) == 1 or sys.argv[1] not in ('--help', '--version'):
+		ping()
+	elif sys.argv[1] == "--version":		
+		print __import__('nodemon').get_version()
+	else:
+		print_help()

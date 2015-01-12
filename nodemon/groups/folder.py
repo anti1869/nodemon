@@ -10,7 +10,7 @@ import sys
 import os.path
 import time
 from datetime import datetime, timedelta, date
-import MySQLdb
+
 
 def signal_freshfile(config, args):
 	""" Check file or last updated file in dir fresh or rotten """
@@ -27,6 +27,9 @@ def signal_freshfile(config, args):
 
 def signal_freshdbrecord(config, args):
 	""" Check last db record is fresh or rotten """
+	if args['connection'] is None: # MySQL connection unavailable
+		sys.stderr.write("WARNING no MySQL connection available, 'freshdbrecord signal' will not work\n")
+		return None
 	cursor = args['connection'].cursor()
 	try:
 		cursor.execute("select %s from %s order by %s desc limit 1" % (config['field'], config['table'], config['field']))
@@ -50,6 +53,9 @@ def signal_freshdbrecord(config, args):
 def signal_errorlog(config, args):
 	""" Get errors from mysql log """
 	if 'table' in config: # Log in MySQL table
+		if args['connection'] is None: # MySQL connection unavailable
+			sys.stderr.write("WARNING no MySQL connection available, 'mysql errorlog signal' will not work\n")
+			return None
 		cursor = args['connection'].cursor()
 		rotten = datetime.today() - timedelta(**config['rotten'])				
 		try:
@@ -69,7 +75,7 @@ def signal_errorlog(config, args):
 def process(config, args):
 	""" Process all signals in this group """
 	signals_output = []
-	if 'connection' in args and 'mysql-db' in config:		
+	if 'connection' in args and 'mysql-db' in config and args['connection'] is not None:		
 		cursor = args['connection'].cursor()
 		cursor.execute("use %s" % config['mysql-db']) # Switch to specified mysql database
 	for signal in config['signals']:

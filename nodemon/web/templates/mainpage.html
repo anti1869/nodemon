@@ -14,7 +14,10 @@ $def datetime(dt):
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.1/Chart.min.js"></script>
 <ul class="nodes">
 $for report in report_list:
-	<li class="node"><span class="node-name">$report['nodename']</span> <span class="dimmed">$report['external-ip']</span> <span class="node-alive-$report['alive']">Last seen at $datetime(report['last-seen']) ($report['last-seen-hours-ago'] hours ago)</span>
+	<li class="node"><span class="node-name">$report['nodename']</span> <span class="dimmed">$report['external-ip']</span> 
+		$if report['version'] != version:
+			<span class="bad">$report['version']</span>
+		 <span class="node-alive-$report['alive']">Last seen at $datetime(report['last-seen']) ($report['last-seen-hours-ago'] hours ago)</span>
 		$for group in report['groups']:
 			<ul>
 				$if group['group'] == 'folder':

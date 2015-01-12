@@ -15,8 +15,11 @@ from datetime import datetime, timedelta
 from nodemon import config_loader
 config = config_loader.load_config()
 
+server_version = __import__('nodemon').get_version()
+
 t_globals = {
 	'title':'Nodemon Web Interface',
+	'version':server_version,
 }
 
 class Mainpage:		

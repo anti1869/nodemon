@@ -19,6 +19,9 @@ def load_chartvalues(args, chart_id):
 
 def chart_dbtablecount(chart, args):
 	""" Get count of items in some database table """	
+	if args['connection'] is None: # MySQL connection unavailable
+		sys.stderr.write("WARNING no MySQL connection available, 'dbtablecount chart' will not work\n")
+		return None
 	chart['values'] = load_chartvalues(args, chart['id'])
 	if not 'last_dbtablecount' in args['db'] or datetime.strptime(args["db"]['last_dbtablecount'].split('.')[0], '%Y-%m-%dT%H:%M:%S') < datetime.today() - timedelta(**chart['update']): # Skip this update if it is too early
 		args['db']['last_dbtablecount'] = datetime.today()
@@ -36,9 +39,11 @@ def process(config, args):
 		cursor = args['connection'].cursor() # Prepare mysql cursor
 	for chart in config['charts']:	
 		try:			
-			charts.append(getattr(sys.modules[__name__], "chart_%s" % chart['type'])(chart, args))
+			output = getattr(sys.modules[__name__], "chart_%s" % chart['type'])(chart, args)			
 		except AttributeError:
 			sys.stderr.write('WARNING no support for "%s" chart\n' % chart['type'])
 			continue
+		if output is not None:
+			charts.append(output)
 	config['charts'] = charts
 	return config
