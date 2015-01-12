@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='nodemon',
-	version = '0.2',
+	version = '0.2.0-alpha',
 	description = 'Webservice node monitoring tool',
 	url = 'https://github.com/anti1869/nodemon',
 	author = 'Dmitry Litvinenko',
