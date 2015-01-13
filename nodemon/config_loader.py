@@ -28,7 +28,7 @@ def load_config():
 		with open(get_config_path(), 'r') as f:
 			config = json.load(f)		
 	except TypeError:
-		sys.stderr.write('ERROR loading config file. Make one of this files:\n'+ '\n'.join([o for o in CONFIG_OPTIONS]) + "\nPrint monitor.py --help for help\n" % os.path.basename(__file__))
+		sys.stderr.write('ERROR loading config file. Make one of this files:\n'+ '\n'.join([o for o in CONFIG_OPTIONS]) + "\nPrint monitor.py --help for help\n")
 		sys.exit()
 	return config
 	

@@ -10,7 +10,7 @@ import sys
 import os.path
 import time
 from datetime import datetime, timedelta, date
-
+from nodemon import safe_sql_identifier
 
 def signal_freshfile(config, args):
 	""" Check file or last updated file in dir fresh or rotten """
@@ -32,8 +32,8 @@ def signal_freshdbrecord(config, args):
 		return None
 	cursor = args['connection'].cursor()
 	try:
-		cursor.execute("select %s from %s order by %s desc limit 1" % (config['field'], config['table'], config['field']))
-	except MySQLdb.Error as e: # Some MySQL error
+		cursor.execute("select %s from %s order by %s desc limit 1" % (safe_sql_identifier(config['field']), safe_sql_identifier(config['table']), safe_sql_identifier(config['field'])))
+	except: # Some MySQL error
 		sys.stderr.write('WARNING: MySQL error while queryeng field "%s" in table "%s"\n' % (config['field'], config['table']))
 		config['status'] = False
 		config['last-update'] = None
@@ -59,14 +59,14 @@ def signal_errorlog(config, args):
 		cursor = args['connection'].cursor()
 		rotten = datetime.today() - timedelta(**config['rotten'])				
 		try:
-			cursor.execute("select count(*) from %s where created >= '%s' limit 1" % (config['table'], rotten))
-		except MySQLdb.Error as e:
+			cursor.execute("select count(*) from %s where created >= '%s' limit 1" % (safe_sql_identifier(config['table']), rotten))
+		except:
 			config['total'] = 1
 			config['errors'] = [['','NODEMON CONFIG ERROR: No table %s exist' % config['table'], 0]]
 			sys.stderr.write('WARNING no table "%s" exist\n' % config['table'])
 			return None
 		config['total'] = cursor.fetchone()[0]
-		cursor.execute("select path, title, count(*) as cnt from %s group by path order by cnt desc" % (config['table']))
+		cursor.execute("select path, title, count(*) as cnt from %s group by path order by cnt desc" % (safe_sql_identifier(config['table'])))
 		config['errors'] = [[i[0], i[1], i[2]] for i in cursor.fetchall()]
 	return config
 	
@@ -77,7 +77,7 @@ def process(config, args):
 	signals_output = []
 	if 'connection' in args and 'mysql-db' in config and args['connection'] is not None:		
 		cursor = args['connection'].cursor()
-		cursor.execute("use %s" % config['mysql-db']) # Switch to specified mysql database
+		cursor.execute("use %s" % safe_sql_identifier(config['mysql-db'])) # Switch to specified mysql database
 	for signal in config['signals']:
 		try:			
 			output = getattr(sys.modules[__name__], "signal_%s" % signal['type'])(signal, args)			

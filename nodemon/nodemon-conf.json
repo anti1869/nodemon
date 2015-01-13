@@ -67,6 +67,8 @@
 		{
 			"group":"faillog",
 			"title":"Faillogs",
+			"success_stamp":"End of '",
+			"rotten":{"days":1},
 			"dirs":["/Users/anti1869/Sites/bhom/trunk/tmp/faillog","/Users/anti1869/Sites/redpig/trunk/tmp/faillog"]
 		},
 		{

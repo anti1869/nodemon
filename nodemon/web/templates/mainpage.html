@@ -45,7 +45,7 @@ $for report in report_list:
 					<li class="group faillog"><span class="group-title">$group['title']</span>
 						<ul class="list">
 							$for fail in group['fails']:
-								<li class="faillog-fail"><span class="pseudolink bad" onclick="swapClass('faillog-fail-$loop.index', 'active', 'passive');">$fail['file']</span><div class="passive" id="faillog-fail-$loop.index"><pre>$fail['tail']</pre></div></li>
+								<li class="faillog-fail"><span class="pseudolink bad" onclick="swapClass('faillog-fail-$loop.index', 'active', 'passive');">$fail['file']</span> <span class="dimmed">($datetime(fail['last-update']))</span><div class="passive" id="faillog-fail-$loop.index"><pre>$fail['tail']</pre></div></li>
 						</ul>
 					</li>								
 				$if group['group'] == 'process':

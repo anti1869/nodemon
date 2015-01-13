@@ -8,8 +8,8 @@
 
 import os, sys
 import glob
+from datetime import datetime, timedelta
 
-SUCCESS_STAMP = "End of '"
 
 def tail(f, lines=20 ):
 	""" http://stackoverflow.com/questions/136168/get-last-n-lines-of-a-file-with-python-similar-to-tail  """
@@ -44,6 +44,7 @@ def process(config, args):
 	for faillog_dir in config['dirs']:
 		for faillog_file in glob.glob('%s/*.log' % faillog_dir):
 			with open(faillog_file, 'r') as f:
-				if SUCCESS_STAMP not in tail(f, 1):
-					config['fails'].append({"file":faillog_file, "tail":tail(f,20)})
+				last_update = datetime.fromtimestamp(os.path.getmtime(faillog_file))
+				if config['success_stamp'] not in tail(f, 1) or ('rotten' in config and last_update < datetime.today() - timedelta(**config['rotten'])):
+					config['fails'].append({"file":faillog_file, "last-update":last_update, "tail":tail(f,20)})
 	return config

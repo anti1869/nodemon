@@ -8,6 +8,7 @@
 
 import os, sys
 from datetime import datetime, timedelta
+from nodemon import safe_sql_identifier
 
 def load_chartvalues(args, chart_id):
 	""" Load chart values for previous days or runs """
@@ -27,8 +28,8 @@ def chart_dbtablecount(chart, args):
 		args['db']['last_dbtablecount'] = datetime.today()
 		cursor = args['connection'].cursor()
 		dbtable = chart['dbtable'].split('/')			
-		cursor.execute("use %s" % dbtable[0]) # Switch to specified mysql database	
-		cursor.execute("select count(*) from %s" % dbtable[1])
+		cursor.execute("use %s" % safe_sql_identifier(dbtable[0])) # Switch to specified mysql database	
+		cursor.execute("select count(*) from %s" % safe_sql_identifier(dbtable[1]))
 		chart['values'].append(cursor.fetchone()[0])
 	return chart
 
