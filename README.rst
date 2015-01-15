@@ -10,4 +10,4 @@ Central node has web interface that allows you to see all nodes reports.
 Documentation 
 --------
 
-Sorry, no docs this time
+Sorry, no docs this time. Need to do some stable releases first.

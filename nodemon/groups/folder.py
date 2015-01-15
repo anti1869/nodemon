@@ -31,9 +31,14 @@ def signal_freshdbrecord(config, args):
 		sys.stderr.write("WARNING no MySQL connection available, 'freshdbrecord signal' will not work\n")
 		return None
 	cursor = args['connection'].cursor()
+	if 'where' in config: # This request should be conditional.
+		where_logic = safe_sql_identifier(config['where_logic']) if 'where_logic' in config else 'and' # OR or AND?
+		where_string = "where " + str(" %s " % where_logic).join("%s = %%s" % safe_sql_identifier(key) for key, value in config['where']) # Construct WHERE part of the SQL query
+		where_params = [value for key, value in config['where']] # Collect params for the MySQL driver
 	try:
-		cursor.execute("select %s from %s order by %s desc limit 1" % (safe_sql_identifier(config['field']), safe_sql_identifier(config['table']), safe_sql_identifier(config['field'])))
-	except: # Some MySQL error
+		# Make query with optional WHERE part. All identifiers should be inject-free. At least, I hope so.
+		cursor.execute("select %s from %s %s order by %s desc limit 1" % (safe_sql_identifier(config['field']), safe_sql_identifier(config['table']), where_string if 'where' in config else '', safe_sql_identifier(config['field'])), where_params if 'where' in config else [])
+	except: # Some MySQL error. I don't want to import MySQLdb in this file to do more explicit exception catching. Hey, what else could be wrong here?!
 		sys.stderr.write('WARNING: MySQL error while queryeng field "%s" in table "%s"\n' % (config['field'], config['table']))
 		config['status'] = False
 		config['last-update'] = None

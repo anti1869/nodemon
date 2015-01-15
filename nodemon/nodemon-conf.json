@@ -25,6 +25,8 @@
 				{
 					"type":"freshdbrecord",
 					"title":"Пример проверки записи БД",
+					"where":[["currency_id",31], ["currency_id",32]],
+					"where_logic":"or",
 					"table":"currencies_currencyquote",
 					"field":"updated",
 					"rotten":{"days":1}
