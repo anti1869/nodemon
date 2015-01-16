@@ -30,11 +30,18 @@ render = web.template.render('templates', base = "base", globals = t_globals)
 
 
 # Run app
-if __name__ == "__main__": 
+#if __name__ == "__main__": 
+#	app = web.application(urls, globals())
+#	app.run()
+#	
+#app = web.application(urls, globals(), autoreload=False)
+#application = app.wsgifunc()	
+
+def run_webserver():
 	app = web.application(urls, globals())
 	app.run()
-	
-app = web.application(urls, globals(), autoreload=False)
-application = app.wsgifunc()	
-	
+
+def get_wsgi_application():
+	app = web.application(urls, globals(), autoreload=False)
+	return app.wsgifunc()	
 	

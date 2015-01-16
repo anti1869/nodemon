@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 def readme():
 	with open('README.rst', 'r') as f:
@@ -15,6 +15,11 @@ setup(name='nodemon',
 	author_email = 'anti1869@gmail.com',
 	packages = ['nodemon', 'nodemon.groups', 'nodemon.web'],
 	scripts = ['nodemon/bin/monitor.py'],
+	include_package_data = True,
 	install_requires = ['web.py>=0.37'],
 	license='MIT',
 	zip_safe = False)
+	
+print "************************************************************"
+print "Hey, type 'monitor.py --install' to do initial configuration"
+print "************************************************************"

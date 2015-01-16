@@ -12,7 +12,7 @@ import sys
 import json
 
 CONFIG_FILENAME = 'nodemon-conf.json'
-CONFIG_OPTIONS = [os.path.join(os.path.expanduser("~"), ".%s" % CONFIG_FILENAME), os.path.join(os.path.dirname(os.path.realpath(__file__)), CONFIG_FILENAME)]
+CONFIG_OPTIONS = [os.path.join(os.path.expanduser("~"), ".%s" % CONFIG_FILENAME), os.path.join('/etc', CONFIG_FILENAME), os.path.join(os.path.dirname(os.path.realpath(__file__)), CONFIG_FILENAME)]
 
 
 def get_config_path():

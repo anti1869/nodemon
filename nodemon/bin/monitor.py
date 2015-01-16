@@ -72,11 +72,10 @@ def ping():
 	
 	# Prepare to report
 	try:
-		config.pop('mysql')
-		config['version'] = __import__('nodemon').get_version()
+		config.pop('mysql')		
 	except KeyError:
 		pass
-		
+	config['version'] = __import__('nodemon').get_version()
 	# Report to central
 	
 	request = urllib2.Request("http://%s/report/" % config['report-host'], json.dumps(config, default=json_serial), {'Content-Type': 'application/json'}) 
@@ -105,9 +104,15 @@ def print_help():
 	
 
 if __name__ == "__main__":
-	if len(sys.argv) == 1 or sys.argv[1] not in ('--help', '--version'):
+	if len(sys.argv) == 1 or sys.argv[1] not in ('--help', '--version', '--install', '--install-web'):
 		ping()
 	elif sys.argv[1] == "--version":		
 		print __import__('nodemon').get_version()
+	elif sys.argv[1] == "--install":		
+		from nodemon import installer
+		installer.run_installer()
+	elif sys.argv[1] == "--install-web":
+		from nodemon import installer
+		installer.install_webinterface_files()
 	else:
 		print_help()
