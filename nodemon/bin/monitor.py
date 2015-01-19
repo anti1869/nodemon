@@ -41,7 +41,11 @@ def ping():
 	if 'mysql' in config:
 		try:
 			import MySQLdb
-			args['connection'] = MySQLdb.connect(**config['mysql'])
+			try:
+				args['connection'] = MySQLdb.connect(**config['mysql'])
+			except:
+				args.pop('connection')
+				sys.stderr.write("WARNING error connecting to MySQL database\n")
 		except ImportError:
 			sys.stderr.write("WARNING config demands monitoring MySQL databases, but no 'mysql-python' package found\n")
 		

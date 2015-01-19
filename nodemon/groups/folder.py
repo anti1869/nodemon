@@ -16,11 +16,16 @@ def signal_freshfile(config, args):
 	""" Check file or last updated file in dir fresh or rotten """
 	if os.path.isfile(config['path']): # Path is a file
 		config["last-update"] = datetime.fromtimestamp(os.path.getmtime(config['path']))
-	else: # Path is a dir, get last modified file in there
+	elif os.path.isdir(config['path']): # Path is a dir, get last modified file in there		
 		entries = [os.path.join(config['path'], fn) for fn in os.listdir(config['path']) if os.path.isfile(os.path.join(config['path'], fn))] # List files in dir
 		entries = [(os.path.getmtime(path), path) for path in entries]
 		entries = sorted(entries, key = lambda x: x[0])
 		config["last-update"] = datetime.fromtimestamp(entries[-1][0])
+	else: # Path does not exist
+		sys.stderr.write("WARNING path does not exist '%s'\n" % config['path'])
+		config["status"] = False
+		config["last-update"] = None
+		return config
 	config["status"] = False if config["last-update"] < datetime.today() - timedelta(**config['rotten']) else True # True = fresh, False = rotten
 	return config
 

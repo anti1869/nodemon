@@ -32,7 +32,7 @@ $for report in report_list:
 											<div class="passive" id="errorlog-signal-errors">
 												<ul class="errors">
 													$for error in signal['errors']:
-														<li>$error[2] - $error[0] - <pre>$error[1]</pre></li>
+														<li>$error[2] - <a href="$signal['url']$error[0]">$error[0]</a> - <pre>$error[1]</pre></li>
 												</ul>
 											</div>
 									</li>

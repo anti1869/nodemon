@@ -3,7 +3,7 @@ import re
 PACKAGE_NAME = "Nodemon"
 
 def get_version():
-	return '0.2.0-alpha.3'
+	return '0.2.0-alpha.4'
 
 __version__ = get_version()
 mysql_allowed = re.compile('[0-9a-zA-Z_$]+')

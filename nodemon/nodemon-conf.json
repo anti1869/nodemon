@@ -33,6 +33,7 @@
 				},
 				{
 					"type":"errorlog",
+					"url": "http://bhom.ru",
 					"title":"Ошибки 500",
 					"table":"errorlog_500",
 					"rotten":{"days":1}
