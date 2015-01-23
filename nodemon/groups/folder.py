@@ -71,13 +71,16 @@ def signal_errorlog(config, args):
 		try:
 			cursor.execute("select count(*) from %s where created >= '%s' limit 1" % (safe_sql_identifier(config['table']), rotten))
 		except:
-			config['total'] = 1
+			config['total'] = 0
+			config['total-fresh'] = 0
 			config['errors'] = [['','NODEMON CONFIG ERROR: No table %s exist' % config['table'], 0]]
 			sys.stderr.write('WARNING no table "%s" exist\n' % config['table'])
 			return None
+		config['total-fresh'] = cursor.fetchone()[0]
+		cursor.execute("select count(*) from %s limit 1" % (safe_sql_identifier(config['table'])))
 		config['total'] = cursor.fetchone()[0]
-		cursor.execute("select path, title, count(*) as cnt from %s group by path order by cnt desc" % (safe_sql_identifier(config['table'])))
-		config['errors'] = [[i[0], i[1], i[2]] for i in cursor.fetchall()]
+		cursor.execute("select path, title, count(*) as cnt, created from %s group by path order by created desc" % (safe_sql_identifier(config['table'])))
+		config['errors'] = [[i[0], i[1], i[2], i[3]] for i in cursor.fetchall()]
 	return config
 	
 	
