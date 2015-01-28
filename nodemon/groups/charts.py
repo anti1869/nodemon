@@ -24,8 +24,8 @@ def chart_dbtablecount(chart, args):
 		sys.stderr.write("WARNING no MySQL connection available, 'dbtablecount chart' will not work\n")
 		return None
 	chart['values'] = load_chartvalues(args, chart['id'])
-	if not 'last_dbtablecount' in args['db'] or datetime.strptime(args["db"]['last_dbtablecount'].split('.')[0], '%Y-%m-%dT%H:%M:%S') < datetime.today() - timedelta(**chart['update']): # Skip this update if it is too early
-		args['db']['last_dbtablecount'] = datetime.today()
+	if not 'last_dbtablecount_%s' % chart['id'] in args['db'] or datetime.strptime(args["db"]['last_dbtablecount_%s' % chart['id']].split('.')[0], '%Y-%m-%dT%H:%M:%S') < datetime.today() - timedelta(**chart['update']): # Skip this update if it is too early
+		args['db']['last_dbtablecount_%s' % chart['id']] = datetime.today()
 		cursor = args['connection'].cursor()
 		dbtable = chart['dbtable'].split('/')			
 		cursor.execute("use %s" % safe_sql_identifier(dbtable[0])) # Switch to specified mysql database	
