@@ -90,7 +90,7 @@ def process(config, args):
 	signals_output = []
 	if 'connection' in args and 'mysql-db' in config and args['connection'] is not None:		
 		cursor = args['connection'].cursor()
-		cursor.execute("use %s" % safe_sql_identifier(config['mysql-db'])) # Switch to specified mysql database
+		cursor.execute("use `%s`" % safe_sql_identifier(config['mysql-db'])) # Switch to specified mysql database
 	for signal in config['signals']:
 		try:			
 			output = getattr(sys.modules[__name__], "signal_%s" % signal['type'])(signal, args)			

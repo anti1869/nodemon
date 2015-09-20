@@ -4,7 +4,7 @@ PACKAGE_NAME = "Nodemon"
 
 
 def get_version():
-    return '0.2.0-beta.3'
+    return '0.2.0-beta.4'
 
 
 __version__ = get_version()
